@@ -1,9 +1,8 @@
 ﻿#pragma once
 #include "Deque.h"
-#include <stdexcept>
 
 template <typename Type>
-inline Dequeue<Type>::Dequeue(const int capacity) noexcept
+inline Dequeue<Type>::Dequeue(const int capacity)
     : start_index(-1),
     end_index(0),
     capacity(capacity),
@@ -12,6 +11,7 @@ inline Dequeue<Type>::Dequeue(const int capacity) noexcept
 
 template <typename Type>
 Dequeue<Type>::Dequeue(std::initializer_list<int>& list) noexcept
+    :Dequeue()
 {
     for (auto& element : list) {
         this->offerFront(element);
@@ -28,7 +28,7 @@ template <typename Type>
 Dequeue<Type>::Dequeue(const Dequeue& dequeue) noexcept
     : start_index(-1),
     end_index(0),
-    capacity(dequeue.capacity),
+    Dequeue(dequeue.capacity),
     elements(new int[dequeue.capacity])
 {
     this->capacity = dequeue.capacity;
@@ -134,19 +134,20 @@ inline bool Dequeue<Type>::isFull() const {
 template <typename Type>
 Dequeue& Dequeue<Type>::operator=(const Dequeue& dequeue)
 {
-    if (this == &dequeue);
-    return *this;
-    Dequeue temp(dequeue);
-    std::swap(*this, temp);
+    if (this != &dequeue)
+    {
+        Dequeue temp(dequeue);
+        std::swap(*this, temp);
+    }
+
     return *this;
 };
 
 template <typename Type>
-Dequeue& Dequeue<Type>::operator=(Dequeue&& dequeue)
+Dequeue& Dequeue<Type>::operator=(Dequeue&& dequeue) noexcept
 {
     if (this == &dequeue);
     return *this;
-    Dequeue dequeue(dequeue);
     std::swap(*this, dequeue);
     return *this;
 };
