@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#include "../Project1.1/Deque.h" 
+#include "../Project1.1/Dequeue.hpp" 
 
 int main()
 {
