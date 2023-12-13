@@ -13,6 +13,21 @@ public:
     Dequeue(const int capacity);
 
     /**
+    *@brief Удаляет объект
+    */
+    ~Dequeue();
+
+    /**
+    *@brief Конструктор копирования
+    */
+    Dequeue(const Dequeue& deque) noexcept;
+
+    /**
+    *@brief Конструктор перемещения
+    */
+    Dequeue(Dequeue&& deque) noexcept;
+
+    /**
     *@brief Удаляет элемент из передней части очереди
     * 
     *@return  Удалённый элемент из передней части очереди
@@ -70,6 +85,16 @@ public:
     */
     bool isFull() const;
 
+    /**
+    *@brief Замена переменных
+    */
+    friend void swap(Dequeue& lhs, Dequeue& rhs);
+
+    Dequeue& operator = (const Dequeue& Dequeue);
+
+    Dequeue& operator = (Dequeue&& Dequeue);
+
+
 private:
     void assertNotFull() const;
     void assertNotEmpty() const;
@@ -86,7 +111,31 @@ inline Dequeue<Type>::Dequeue(const int capacity)
     end_index(0),
     capacity(capacity),
     elements(new Type[capacity]) {
+} 
 
+template<typename Type>
+inline Dequeue<Type>::~Dequeue()
+{
+    delete[]elements;
+}
+
+template<typename Type>
+inline Dequeue<Type>::Dequeue(const Dequeue& deque) noexcept
+        : start_index(-1),
+        end_index(0),
+        capacity(Dequeue.capacity),
+        elements(new int[Dequeue.capacity])
+    {
+        this->capacity = deque.capacity;
+        this->start_index = deque.start_index;
+        this->end_index = deque.end_index;
+        this->elements = deque.elements;
+    }
+
+template<typename Type>
+inline Dequeue<Type>::Dequeue(Dequeue&& deque) noexcept
+{
+    std::swap(*this, deque);
 };
 
 template <typename Type>
@@ -177,6 +226,25 @@ inline bool Dequeue<Type>::isFull() const {
     return (start_index == 0 && end_index == capacity - 1) ||
         start_index == end_index + 1;
 };
+
+template<typename Type>
+inline Dequeue<Type>& Dequeue<Type>::operator=(const Dequeue& Dequeue)
+{
+    if (this == &Dequeue)
+    {
+        std::swap(*this, Dequeue);
+    }
+    return *this;
+}
+
+template<typename Type>
+inline Dequeue<Type>& Dequeue<Type>::operator=(Dequeue&& Dequeue)
+{
+    if (this == &Dequeue);
+    return *this;
+    std::swap(*this, Dequeue);
+    return *this;
+}
 
 template <typename Type>
 inline void Dequeue<Type>::assertNotFull() const {

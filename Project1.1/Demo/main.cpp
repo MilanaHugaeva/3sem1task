@@ -3,6 +3,6 @@
 
 int main()
 {
-	Dequeue dequeue(2);
+	Dequeue<int> dequeue(2);
 	return 0;
 }
