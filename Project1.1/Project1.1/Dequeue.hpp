@@ -1,5 +1,8 @@
 ﻿#pragma once
 #include <cmath>
+#include <ostream>
+#include <sstream>
+#include <string>
 
 template <typename Type>
 class Dequeue {
@@ -86,6 +89,19 @@ public:
     bool isFull() const;
 
     /**
+    *@brief Функция, которая преобразует коллекцию в строку.
+    *@return Строку, состоящую из Nodes.
+    */
+    std::wstring ToString() noexcept;
+
+    /**
+    *@brief Функция, перегружающая оператор сравнения.
+    *@param Сравнивает второй список.
+    *@return Если содержимое списка равно второму списку то значение true и в противном случае значение false.
+    */
+    bool operator==(Dequeue<Type>& second);
+
+    /**
     *@brief Замена переменных
     */
     friend void swap(Dequeue& lhs, Dequeue& rhs);
@@ -129,8 +145,8 @@ template<typename Type>
 inline Dequeue<Type>::Dequeue(const Dequeue& deque) noexcept
         : start_index(-1),
         end_index(0),
-        capacity(Dequeue.capacity),
-        elements(new int[Dequeue.capacity])
+        capacity(capacity),
+        elements(new int[capacity])
     {
         this->capacity = deque.capacity;
         this->start_index = deque.start_index;
@@ -234,7 +250,18 @@ template <typename Type>
 inline bool Dequeue<Type>::isFull() const {
     return (start_index == 0 && end_index == capacity - 1) ||
         start_index == end_index + 1;
-};
+}
+template<typename Type>
+inline std::wstring Dequeue<Type>::ToString() noexcept
+{
+    return std::wstring();
+}
+template<typename Type>
+inline bool Dequeue<Type>::operator==(Dequeue<Type>& second)
+{
+    return(this->ToString() == second.ToString());
+}
+;
 
 template<typename Type>
 inline Dequeue<Type>& Dequeue<Type>::operator=(const Dequeue& Dequeue)
@@ -255,6 +282,15 @@ inline Dequeue<Type>& Dequeue<Type>::operator=(Dequeue&& dequeue)
         std::swap(*this, dequeue);
     }
     return *this;
+}
+
+template<typename Type>
+std::wstring ToString(const Dequeue<Type>& dequeue)
+{
+    std::wstringstream buffer{};
+    buffer << dequeue;
+
+    return buffer.str();
 }
 
 template <typename Type>
