@@ -93,12 +93,13 @@ public:
     Dequeue& operator = (const Dequeue& Dequeue);
 
     Dequeue& operator = (Dequeue&& Dequeue);
-
-
-private:
+    
     void assertNotFull() const;
     void assertNotEmpty() const;
 
+
+private:
+   
     Type* elements;
     int start_index;
     int end_index;
@@ -110,7 +111,12 @@ inline Dequeue<Type>::Dequeue(const int capacity)
     : start_index(-1),
     end_index(0),
     capacity(capacity),
-    elements(new Type[capacity]) {
+    elements(new Type[capacity]) 
+{
+    if ( capacity <= 0)
+    {
+        throw std::logic_error("Невожможное значение!");
+    }
 } 
 
 template<typename Type>
@@ -129,11 +135,14 @@ inline Dequeue<Type>::Dequeue(const Dequeue& deque) noexcept
         this->capacity = deque.capacity;
         this->start_index = deque.start_index;
         this->end_index = deque.end_index;
-        this->elements = deque.elements;
+        for (auto i = 0; i < capacity; ++i)
+        {
+            this->elements[i] = deque.elements[i];
+        }    
     }
 
 template<typename Type>
-inline Dequeue<Type>::Dequeue(Dequeue&& deque) noexcept
+inline Dequeue<Type>::Dequeue(Dequeue&& deque) noexcept : Dequeue() 
 {
     std::swap(*this, deque);
 };
@@ -232,17 +241,19 @@ inline Dequeue<Type>& Dequeue<Type>::operator=(const Dequeue& Dequeue)
 {
     if (this == &Dequeue)
     {
-        std::swap(*this, Dequeue);
+        return *this;
     }
+    std::swap(*this, Dequeue);
     return *this;
 }
 
 template<typename Type>
-inline Dequeue<Type>& Dequeue<Type>::operator=(Dequeue&& Dequeue)
+inline Dequeue<Type>& Dequeue<Type>::operator=(Dequeue&& dequeue)
 {
-    if (this == &Dequeue);
-    return *this;
-    std::swap(*this, Dequeue);
+    if (*this != dequeue)
+    {
+        std::swap(*this, dequeue);
+    }
     return *this;
 }
 
