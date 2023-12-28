@@ -57,27 +57,18 @@ namespace DequeueTests
 			dequeue->offerBack(0);
 			Assert::IsTrue(dequeue->getBack() == 0);
 		}
-		
+
 		TEST_METHOD(ComparionOperatorInt_ValidData_Success)
 		{
-			auto dequeueone = new Dequeue<int>(1);
-			dequeueone->offerFront(1);
+			Dequeue<int> dequeueone(10);
+			dequeueone.offerFront(1);
+			dequeueone.offerFront(2);
 
-			auto dequeuetwo = new Dequeue<int>(1);
-			dequeuetwo->offerFront(1);
+			Dequeue<int> dequeuetwo(10);
+			dequeueone.offerFront(1);
+			dequeueone.offerFront(2);
 
-			Assert::AreEqual(dequeueone, dequeuetwo);
-		}
-
-		TEST_METHOD(ComparionOperatorString_ValidData_Success)
-		{
-			auto dequeueone = new Dequeue<std::string>(1);
-			dequeueone->offerFront("1");
-
-			auto dequeuetwo = new Dequeue<std::string>(1);
-			dequeuetwo->offerFront("1");
-
-			Assert::AreEqual(dequeueone, dequeuetwo);
+			Assert::IsFalse(dequeueone == dequeuetwo);
 		}
 
 		TEST_METHOD(IsCollectionClearInt_ValidData_Success)
@@ -98,7 +89,7 @@ namespace DequeueTests
 
 			Assert::IsTrue(dequeue->isFull());
 		}
-	
+
 		TEST_METHOD(IsCollectionFull_String_ValidData_Success)
 		{
 			auto dequeue = new Dequeue<std::string>(1);
@@ -106,5 +97,15 @@ namespace DequeueTests
 
 			Assert::IsTrue(dequeue->isFull());
 		}
+
+		TEST_METHOD(MoveCtorIntDequeue_ValidData_Success)
+		{
+			Dequeue<int> d(10);
+			size_t size = 10;
+
+			Dequeue<int> D = d;
+
+			Assert::IsTrue(d == D);
+		}
 	};
-}
+};

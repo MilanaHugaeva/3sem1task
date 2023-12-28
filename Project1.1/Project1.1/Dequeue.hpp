@@ -8,6 +8,11 @@ template <typename Type>
 class Dequeue {
 public:
     /**
+    *@brief Инициализирует класс Dequeue
+    */
+    Dequeue();
+
+    /**
     *@brief Создает пустую ограниченную очередь, содержащую до `capacity`
     *элементов для `int` типов данных
     * 
@@ -23,12 +28,15 @@ public:
     /**
     *@brief Конструктор копирования
     */
-    Dequeue(const Dequeue& deque) noexcept;
+    Dequeue(const Dequeue& deque);
 
     /**
     *@brief Конструктор перемещения
     */
     Dequeue(Dequeue&& deque) noexcept;
+
+    size_t getSize();
+
 
     /**
     *@brief Удаляет элемент из передней части очереди
@@ -61,7 +69,7 @@ public:
     /**
     *@brief Записывает заданный элемент в начало очереди
     *
-    *@param element Элемент, который должен быть помещен в начало очереди        ,
+    *@param element Элемент, который должен быть помещен в начало очереди
     */
     void offerFront(const Type& element);
 
@@ -92,7 +100,7 @@ public:
     *@brief Функция, которая преобразует коллекцию в строку.
     *@return Строку, состоящую из Nodes.
     */
-    std::wstring ToString() noexcept;
+    std::string ToString() noexcept;
 
     /**
     *@brief Функция, перегружающая оператор сравнения.
@@ -108,7 +116,7 @@ public:
 
     Dequeue& operator = (const Dequeue& Dequeue);
 
-    Dequeue& operator = (Dequeue&& Dequeue);
+    Dequeue& operator = (Dequeue&& Dequeue) noexcept;
     
     void assertNotFull() const;
     void assertNotEmpty() const;
@@ -121,6 +129,12 @@ private:
     int end_index;
     int capacity;
 };
+
+template <typename Type>
+Dequeue<Type>::Dequeue()
+    :elements(nullptr), start_index(0), end_index(0), capacity(0)
+{
+}
 
 template <typename Type>
 inline Dequeue<Type>::Dequeue(const int capacity)
@@ -142,7 +156,7 @@ inline Dequeue<Type>::~Dequeue()
 }
 
 template<typename Type>
-inline Dequeue<Type>::Dequeue(const Dequeue& deque) noexcept
+inline Dequeue<Type>::Dequeue(const Dequeue& deque) 
         : start_index(-1),
         end_index(0),
         capacity(capacity),
@@ -161,7 +175,13 @@ template<typename Type>
 inline Dequeue<Type>::Dequeue(Dequeue&& deque) noexcept : Dequeue() 
 {
     std::swap(*this, deque);
-};
+}
+template<typename Type>
+inline size_t Dequeue<Type>::getSize()
+{
+    return capacity;
+}
+;
 
 template <typename Type>
 inline Type Dequeue<Type>::takeFront() {
@@ -222,7 +242,7 @@ inline void Dequeue<Type>::offerFront(const Type& element) {
     else if (start_index == 0)
         start_index = capacity - 1;
     else
-        start_index--;
+        --start_index;
     elements[start_index] = element;
 };
 
@@ -252,30 +272,36 @@ inline bool Dequeue<Type>::isFull() const {
         start_index == end_index + 1;
 }
 template<typename Type>
-inline std::wstring Dequeue<Type>::ToString() noexcept
+inline std::string Dequeue<Type>::ToString() noexcept
 {
-    return std::wstring();
+        std::stringstream buffer;
+        for (size_t i = 0; i < capacity; i++)
+        {
+            buffer << elements[i] << ' ';
+        }
+    return buffer.str();
 }
+
 template<typename Type>
 inline bool Dequeue<Type>::operator==(Dequeue<Type>& second)
 {
     return(this->ToString() == second.ToString());
 }
-;
+
 
 template<typename Type>
-inline Dequeue<Type>& Dequeue<Type>::operator=(const Dequeue& Dequeue)
+inline Dequeue<Type>& Dequeue<Type>::operator=(const Dequeue& dequeue)
 {
-    if (this == &Dequeue)
+    if (this == &dequeue)
     {
         return *this;
     }
-    std::swap(*this, Dequeue);
+    std::swap(*this, dequeue);
     return *this;
 }
 
 template<typename Type>
-inline Dequeue<Type>& Dequeue<Type>::operator=(Dequeue&& dequeue)
+inline Dequeue<Type>& Dequeue<Type>::operator=(Dequeue&& dequeue) noexcept
 {
     if (*this != dequeue)
     {
